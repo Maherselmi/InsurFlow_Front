@@ -1,0 +1,267 @@
+<div class="assistant-page">
+  <aside class="assistant-sidebar">
+    <div class="brand" (click)="goBackToClientSpace()">
+      <div class="brand-mark">IF</div>
+
+      <div>
+        <strong>InsurFlow</strong>
+        <small>Assistant sinistres</small>
+      </div>
+    </div>
+
+    <button class="new-chat-btn" type="button" (click)="startNewChat()">
+      <span>💬</span>
+      New Chat
+    </button>
+
+    <div class="discussion-list">
+      <button
+        type="button"
+        class="discussion-item"
+        *ngFor="let discussion of discussions"
+        [class.active]="discussion.id === selectedDiscussionId"
+        (click)="selectDiscussion(discussion.id)"
+      >
+        <span>{{ discussion.title }}</span>
+
+        <small
+          class="delete-discussion"
+          title="Supprimer"
+          (click)="deleteDiscussion(discussion.id, $event)"
+        >
+          ×
+        </small>
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <span>Client connecté</span>
+      <strong>{{ fullName }}</strong>
+
+      <button type="button" (click)="goBackToClientSpace()">
+        Retour espace client
+      </button>
+    </div>
+  </aside>
+
+  <main class="assistant-main">
+    <div class="background-circle circle-one"></div>
+    <div class="background-circle circle-two"></div>
+
+    <section class="assistant-hero" *ngIf="messages.length <= 1">
+      <div class="assistant-bot">
+        <div class="bot-head">
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="bot-body">
+          <span></span>
+        </div>
+      </div>
+
+      <p class="hello">Bonjour,</p>
+
+      <h1>Je suis là pour vous aider</h1>
+
+      <p class="subtitle">
+        Consultez vos polices, suivez vos dossiers de sinistre ou démarrez
+        une déclaration guidée par conversation.
+      </p>
+
+      <div class="action-grid">
+        <button
+          type="button"
+          class="action-card"
+          *ngFor="let action of actions"
+          (click)="sendActionMessage(action)"
+        >
+          <span class="action-icon">{{ action.icon }}</span>
+          <strong>{{ action.title }}</strong>
+          <small>{{ action.subtitle }}</small>
+        </button>
+      </div>
+    </section>
+
+    <section class="chat-zone" *ngIf="messages.length > 1">
+      <div
+        class="message-row"
+        *ngFor="let message of messages"
+        [class.user]="message.sender === 'user'"
+        [class.bot]="message.sender === 'bot'"
+      >
+        <div
+          class="message-bubble"
+          [class.rich]="message.kind === 'policies' || message.kind === 'claims'"
+        >
+          <ng-container [ngSwitch]="message.kind">
+            <!-- AFFICHAGE POLICES -->
+            <div *ngSwitchCase="'policies'" class="rich-answer">
+              <div class="rich-answer-header">
+                <span class="rich-icon">📄</span>
+
+                <div>
+                  <strong>Vos polices actives</strong>
+                  <small>
+                    {{ message.policies?.length || 0 }} contrat(s) trouvé(s)
+                  </small>
+                </div>
+              </div>
+
+              <div class="rich-list">
+                <article
+                  class="rich-card policy-card"
+                  *ngFor="let policy of message.policies"
+                >
+                  <div class="rich-card-top">
+                    <span class="card-badge">{{ policy.type }}</span>
+                    <strong>ID {{ policy.id }}</strong>
+                  </div>
+
+                  <h4>{{ policy.number }}</h4>
+
+                  <div class="card-meta">
+                    <span *ngIf="policy.formule">
+                      Formule :
+                      <strong>{{ policy.formule }}</strong>
+                    </span>
+
+                    <span *ngIf="policy.endDate">
+                      Date fin :
+                      <strong>{{ policy.endDate }}</strong>
+                    </span>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <!-- AFFICHAGE DOSSIERS -->
+            <div *ngSwitchCase="'claims'" class="rich-answer">
+              <div class="rich-answer-header">
+                <span class="rich-icon">🛡️</span>
+
+                <div>
+                  <strong>Vos dossiers de sinistre</strong>
+                  <small>
+                    {{ message.claims?.length || 0 }} dossier(s) trouvé(s)
+                  </small>
+                </div>
+              </div>
+
+              <div class="rich-list">
+                <article
+                  class="rich-card claim-card"
+                  *ngFor="let claim of message.claims"
+                >
+                  <div class="rich-card-top">
+                    <span
+                      class="status-pill"
+                      [ngClass]="getClaimStatusClass(claim.status)"
+                    >
+                      {{ getClaimStatusLabel(claim.status) }}
+                    </span>
+
+                    <strong>Dossier #{{ claim.id }}</strong>
+                  </div>
+
+                  <div class="card-meta">
+                    <span *ngIf="claim.incidentDate">
+                      Date incident :
+                      <strong>{{ claim.incidentDate }}</strong>
+                    </span>
+
+                    <span *ngIf="claim.policyNumber">
+                      Police :
+                      <strong>{{ claim.policyNumber }}</strong>
+                    </span>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <!-- TEXTE NORMAL -->
+            <p *ngSwitchDefault>{{ message.text }}</p>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="message-row bot" *ngIf="chatbotLoading">
+        <div class="message-bubble typing">
+          <p>Assistant écrit...</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="chat-upload-zone" *ngIf="needsFileUpload">
+      <div class="upload-title">
+        <strong>Documents justificatifs</strong>
+
+        <p>
+          Joignez les fichiers demandés par l’assistant : images, PDF ou documents.
+        </p>
+      </div>
+
+      <label class="upload-label">
+        Joindre les documents
+
+        <input
+          type="file"
+          multiple
+          accept="image/*,.pdf,.doc,.docx"
+          (change)="onFilesSelected($event)"
+        />
+      </label>
+
+      <div class="selected-files" *ngIf="selectedFiles.length > 0">
+        <strong>Fichiers sélectionnés :</strong>
+
+        <span *ngFor="let file of selectedFiles">
+          {{ file.name }}
+        </span>
+      </div>
+
+      <div class="upload-actions">
+        <button
+          type="button"
+          class="send-docs-btn"
+          [disabled]="!selectedFiles.length || chatbotLoading"
+          (click)="sendClaimDocuments()"
+        >
+          Envoyer les documents
+        </button>
+
+        <button
+          type="button"
+          class="skip-docs-btn"
+          [disabled]="chatbotLoading"
+          (click)="continueWithoutDocuments()"
+        >
+          Continuer sans document
+        </button>
+      </div>
+    </div>
+
+    <form class="assistant-input-zone" (ngSubmit)="sendMessage()">
+      <input
+        type="text"
+        name="chatInput"
+        [(ngModel)]="chatInput"
+        placeholder="Écrivez votre question ou décrivez votre sinistre..."
+        autocomplete="off"
+      />
+
+      <button
+        type="submit"
+        [disabled]="chatbotLoading || !chatInput.trim()"
+        title="Envoyer"
+      >
+        ↑
+      </button>
+    </form>
+
+    <div class="continue-link">
+      <span>Continuer sur</span>
+      <a routerLink="/Client_Space">Espace client InsurFlow</a>
+    </div>
+  </main>
+</div>
