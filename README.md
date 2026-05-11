@@ -1,4 +1,4 @@
-# 🛡️ Agentic Insurance Workflow Orchestration
+#  Agentic Insurance Workflow Orchestration
 ## Final Year Project (PFE) — Frontend Documentation
 
 > Intelligent insurance workflow orchestration platform powered by AI agents, built with **Angular + TypeScript** on the frontend and **Spring AI / LangChain4j** on the backend.
@@ -31,7 +31,7 @@ The Angular frontend provides a modern user interface enabling:
 
 ---
 
-## 2. Frontend Architecture
+## 2. Frontend Architecture (Feature-Based Modular Architecture)
 
 ```
 Client (Angular 17+ — SSR enabled)
@@ -242,51 +242,3 @@ ng serve
 # Available at http://localhost:4200
 ```
 
-### SSR Mode
-
-```bash
-npm run dev:ssr
-# Available at http://localhost:4200
-```
-
-### Production Build
-
-```bash
-ng build --configuration production
-# Output files in dist/
-```
-
-### Tests
-
-```bash
-ng test    # Unit tests
-ng e2e     # End-to-end tests
-```
-
----
-
-## 7. Environment Variables
-
-`src/environments/environment.ts`:
-```typescript
-export const environment = {
-  production: false,
-  apiBaseUrl: 'http://localhost:8080/api',
-  aiAgentUrl: 'http://localhost:8080/api/agent',
-  wsUrl:      'ws://localhost:8080/ws',
-};
-```
-
-`src/environments/environment.prod.ts`:
-```typescript
-export const environment = {
-  production: true,
-  apiBaseUrl: 'https://your-domain.com/api',
-  aiAgentUrl: 'https://your-domain.com/api/agent',
-  wsUrl:      'wss://your-domain.com/ws',
-};
-```
-
----
-
-*Final Year Project — Academic Year 2024/2025*
