@@ -1,221 +1,220 @@
- Orchestration de Workflows d'Assurance "Agentiques"
+# 🛡️ Agentic Insurance Workflow Orchestration
+## Final Year Project (PFE) — Frontend Documentation
 
- Plateforme intelligente d'orchestration de workflows d'assurance basée sur des agents IA, développée avec **Angular + TypeScript** côté frontend, et **Spring AI / LangChain4j** côté backend.
-
----
-
-## 📋 Table des matières
-
-1. [Présentation du projet](#-présentation-du-projet)
-2. [Architecture Frontend](#-architecture-frontend)
-3. [Structure des dossiers](#-structure-des-dossiers)
-4. [Technologies & Dépendances](#-technologies--dépendances)
-5. [Modules fonctionnels](#-modules-fonctionnels)
-6. [Installation & Lancement](#-installation--lancement)
-7. [Variables d'environnement](#-variables-denvironnement)
-8. [Conventions de code](#-conventions-de-code)
-9. [Auteurs](#-auteurs)
+> Intelligent insurance workflow orchestration platform powered by AI agents, built with **Angular + TypeScript** on the frontend and **Spring AI / LangChain4j** on the backend.
 
 ---
 
-## 🎯 Présentation du projet
+## 📋 Table of Contents
 
-Ce projet PFE a pour objectif de concevoir et développer une **plateforme agentique** capable d'orchestrer automatiquement des workflows métier dans le domaine de l'assurance, en s'appuyant sur des agents IA pilotés par **Spring AI** et **LangChain4j**.
-
-Le frontend Angular fournit une interface utilisateur moderne permettant de :
-
-- Superviser et déclencher des workflows d'assurance (sinistres, polices, consultations, décisions)
-- Interagir avec un assistant IA conversationnel (agent InsurFlow)
-- Gérer les clients, experts, agents et réclamations
-- Visualiser les tableaux de bord et statistiques en temps réel
-- Valider ou corriger les décisions IA (Human-in-the-loop)
+1. [Project Overview](#1-project-overview)
+2. [Frontend Architecture](#2-frontend-architecture)
+3. [Folder Structure](#3-folder-structure)
+4. [Tech Stack & Dependencies](#4-tech-stack--dependencies)
+5. [Functional Modules](#5-functional-modules)
+6. [Installation & Setup](#6-installation--setup)
+7. [Environment Variables](#7-environment-variables)
 
 ---
 
-##  Architecture Frontend
+## 1. Project Overview
+
+This Final Year Project aims to design and develop an **agentic platform** capable of automatically orchestrating business workflows in the insurance domain, powered by AI agents built with **Spring AI** and **LangChain4j**.
+
+The Angular frontend provides a modern user interface enabling:
+
+- Monitoring and triggering insurance workflows (claims, policies, consultations, decisions)
+- Interacting with the **InsurFlow** conversational AI agent
+- Managing clients, experts, agents, and claims
+- Visualizing real-time dashboards and statistics
+- Reviewing and correcting AI decisions — **Human-in-the-loop**
+
+---
+
+## 2. Frontend Architecture
 
 ```
-Client (Angular 17+ — SSR activé)
+Client (Angular 17+ — SSR enabled)
 │
-├── core/auth            → Service d'authentification JWT (auth.service.ts)
+├── core/auth            → JWT authentication service (auth.service.ts)
 │
-├── features/            → Modules métier (lazy-loaded, feature-based)
-│   ├── agents           → Résultats des agents IA (agent-result-list)
-│   ├── ai-settings      → Paramétrage des modèles IA (parametres-ia)
-│   ├── assistant        → Chat agentique InsurFlow (insurflow-assistant)
-│   ├── auth/login       → Authentification utilisateur
-│   ├── claims           → Gestion des sinistres (dossiers, rapports, feedback)
-│   ├── clients          → Espace client et liste des assurés
-│   ├── dashboard        → Tableau de bord 
-│   ├── decisions        → Décisions de consultation IA
-│   ├── experts          → Espace expert et formulaires de feedback
-│   ├── home             → Page d'accueil assurance
-│   └── policies         → Gestion des polices d'assurance
+├── features/            → Business modules (lazy-loaded, feature-based)
+│   ├── agents           → AI agent results (agent-result-list)
+│   ├── ai-settings      → LLM model configuration (parametres-ia)
+│   ├── assistant        → InsurFlow AI chat (insurflow-assistant)
+│   ├── auth/login       → User authentication
+│   ├── claims           → Claims management (files, reports, feedback)
+│   ├── clients          → Client space and policyholder list
+│   ├── dashboard        → KPI dashboard
+│   ├── decisions        → AI consultation decisions
+│   ├── experts          → Expert workspace and feedback forms
+│   ├── home             → Insurance platform home
+│   └── policies         → Insurance policy management
 │
-├── layout/              → Sidebar et Topbar (navigation globale)
+├── layout/              → Sidebar and Topbar (global navigation)
 │
-└── app.*                → Composant racine, routes, config SSR
+└── app.*                → Root component, routes, SSR config
 ```
 
 ---
 
-## 📁 Structure des dossiers
+## 3. Folder Structure
 
 ```
 src/
 ├── app/
 │   │
 │   ├── core/
-│   │   └── auth/                             # Couche d'authentification centrale
-│   │       └── auth.service.ts               # Service JWT : login, logout, token
+│   │   └── auth/                             # Central authentication layer
+│   │       └── auth.service.ts               # JWT service: login, logout, token management
 │   │
 │   ├── features/
 │   │   │
-│   │   ├── agents/                           # Module : Agents IA
-│   │   │   ├── data-access/                  # Services & appels API agents
-│   │   │   ├── models/                       # Interfaces TypeScript agents
+│   │   ├── agents/                           # Module: AI Agents
+│   │   │   ├── data-access/                  # Agent API services & HTTP calls
+│   │   │   ├── models/                       # TypeScript interfaces for agents
 │   │   │   └── pages/
-│   │   │       └── agent-result-list/        # Liste des résultats produits par les agents
+│   │   │       └── agent-result-list/        # Displays results produced by AI agents
 │   │   │
-│   │   ├── ai-settings/                      # Module : Paramètres IA
-│   │   │   ├── data-access/                  # Services & appels API configuration IA
+│   │   ├── ai-settings/                      # Module: AI Settings
+│   │   │   ├── data-access/                  # AI configuration API services
 │   │   │   └── pages/
-│   │   │       └── parametres-ia/            # Page de configuration des modèles LLM
+│   │   │       └── parametres-ia/            # LLM model configuration page
 │   │   │
-│   │   ├── assistant/                        # Module : Assistant IA (InsurFlow)
-│   │   │   ├── data-access/                  # Services : envoi/réception des messages IA
+│   │   ├── assistant/                        # Module: AI Assistant (InsurFlow)
+│   │   │   ├── data-access/                  # Services: send/receive AI messages
 │   │   │   └── pages/
-│   │   │       └── insurflow-assistant/      # Interface de chat avec l'agent LangChain4j
+│   │   │       └── insurflow-assistant/      # Chat interface with LangChain4j agent
 │   │   │
 │   │   ├── auth/
-│   │   │   └── login/                        # Page de connexion utilisateur
+│   │   │   └── login/                        # User login page
 │   │   │
-│   │   ├── claims/                           # Module : Sinistres
-│   │   │   ├── claim-types/                  # Enum / constantes des types de sinistres
-│   │   │   ├── data-access/                  # Services & appels API sinistres
-│   │   │   ├── models/                       # Interfaces TypeScript sinistres
+│   │   ├── claims/                           # Module: Claims Management
+│   │   │   ├── claim-types/                  # Claim type enums & constants
+│   │   │   ├── data-access/                  # Claims API services & HTTP calls
+│   │   │   ├── models/                       # TypeScript interfaces for claims
 │   │   │   └── pages/
-│   │   │       ├── admin-claim-reports/      # Rapports sinistres côté administrateur
-│   │   │       ├── claim-report-page/        # Page de rapport d'un sinistre individuel
-│   │   │       ├── claims-home/              # Page d'accueil du module sinistres
-│   │   │       ├── dossier-sinistre/         # Détail complet d'un dossier sinistre
-│   │   │       └── feedback-claims-list/     # Liste des feedbacks sur sinistres traités
+│   │   │       ├── admin-claim-reports/      # Admin-side claims reports
+│   │   │       ├── claim-report-page/        # Individual claim report page
+│   │   │       ├── claims-home/              # Claims module home page
+│   │   │       ├── dossier-sinistre/         # Full claim file detail view
+│   │   │       └── feedback-claims-list/     # Feedback list for processed claims
 │   │   │
-│   │   ├── clients/                          # Module : Clients / Assurés
-│   │   │   ├── data-access/                  # Services & appels API clients
+│   │   ├── clients/                          # Module: Clients / Policyholders
+│   │   │   ├── data-access/                  # Client API services & HTTP calls
 │   │   │   └── pages/
-│   │   │       ├── client-list/              # Liste paginée de tous les clients
-│   │   │       └── client-space/             # Espace personnel d'un client assuré
+│   │   │       ├── client-list/              # Paginated list of all clients
+│   │   │       └── client-space/             # Personal space of a policyholder
 │   │   │
-│   │   ├── dashboard/                        # Module : Tableau de bord
-│   │   │   ├── models/                       # Interfaces TypeScript KPIs / statistiques
+│   │   ├── dashboard/                        # Module: Dashboard
+│   │   │   ├── models/                       # TypeScript interfaces for KPIs & stats
 │   │   │   └── pages/
-│   │   │       └── dashboard/                # Page principale du tableau de bord
+│   │   │       └── dashboard/                # Main dashboard page
 │   │   │
-│   │   ├── decisions/                        # Module : Décisions IA
+│   │   ├── decisions/                        # Module: AI Decisions
 │   │   │   └── pages/
-│   │   │       └── consultation-decisions/   # Revue et validation des décisions IA
+│   │   │       └── consultation-decisions/   # Review & validation of AI decisions
 │   │   │
-│   │   ├── experts/                          # Module : Experts
-│   │   │   ├── data-access/                  # Services & appels API experts
-│   │   │   ├── models/                       # Interfaces TypeScript experts
+│   │   ├── experts/                          # Module: Experts
+│   │   │   ├── data-access/                  # Expert API services & HTTP calls
+│   │   │   ├── models/                       # TypeScript interfaces for experts
 │   │   │   └── pages/
-│   │   │       ├── expert-feedback-form/     # Formulaire de feedback d'un expert
-│   │   │       └── expert-space/             # Espace de travail de l'expert
+│   │   │       ├── expert-feedback-form/     # Expert feedback submission form
+│   │   │       └── expert-space/             # Expert workspace
 │   │   │
-│   │   ├── home/                             # Module : Accueil
+│   │   ├── home/                             # Module: Home
 │   │   │   └── pages/
-│   │   │       └── insurance-home/           # Page d'accueil de la plateforme assurance
+│   │   │       └── insurance-home/           # Insurance platform home page
 │   │   │
-│   │   └── policies/                         # Module : Polices d'assurance
-│   │       ├── data-access/                  # Services & appels API polices
+│   │   └── policies/                         # Module: Insurance Policies
+│   │       ├── data-access/                  # Policy API services & HTTP calls
 │   │       └── pages/
-│   │           ├── polices/                  # Détail et gestion d'une police
-│   │           └── policy-list/              # Vue liste de tous les contrats
+│   │           ├── polices/                  # Policy detail & management
+│   │           └── policy-list/              # Full list of insurance contracts
 │   │
-│   ├── layout/                               # Composants de mise en page globale
-│   │   ├── sidebar/                          # Menu latéral de navigation principal
-│   │   └── topbar/                           # Barre supérieure (profil, notifications)
+│   ├── layout/                               # Global layout components
+│   │   ├── sidebar/                          # Main navigation sidebar
+│   │   └── topbar/                           # Top bar (user profile, notifications)
 │   │
-│   ├── app.component.ts                      # Composant racine Angular
-│   ├── app.component.html                    # Template HTML racine
-│   ├── app.component.css                     # Styles du composant racine
-│   ├── app.component.spec.ts                 # Tests unitaires du composant racine
-│   ├── app.config.ts                         # Configuration principale (providers, DI)
-│   ├── app.config.server.ts                  # Configuration SSR (Server-Side Rendering)
-│   └── app.routes.ts                         # Définition des routes de l'application
+│   ├── app.component.ts                      # Root Angular component
+│   ├── app.component.html                    # Root HTML template
+│   ├── app.component.css                     # Root component styles
+│   ├── app.component.spec.ts                 # Root component unit tests
+│   ├── app.config.ts                         # Main app configuration (providers, DI)
+│   ├── app.config.server.ts                  # SSR configuration (Server-Side Rendering)
+│   └── app.routes.ts                         # Application route definitions
 │
-├── assets/                                   # Ressources statiques (images, icônes, fonts)
-├── favicon.ico                               # Icône de l'application
-├── index.html                                # Point d'entrée HTML principal
-├── main.ts                                   # Bootstrap Angular (mode client)
-├── main.server.ts                            # Bootstrap Angular (mode SSR)
-└── styles.css                                # Styles globaux de l'application
+├── assets/                                   # Static resources (images, icons, fonts)
+├── favicon.ico                               # Application icon
+├── index.html                                # Main HTML entry point
+├── main.ts                                   # Angular bootstrap (client mode)
+├── main.server.ts                            # Angular bootstrap (SSR mode)
+└── styles.css                                # Global application styles
 ```
 
 ---
 
-## 🛠️ Technologies & Dépendances
+## 4. Tech Stack & Dependencies
 
-| Technologie | Version | Rôle |
+| Technology | Version | Role |
 |---|---|---|
-| Angular | 17+ | Framework frontend principal |
-| TypeScript | 5.x | Langage de développement |
-| Angular Material | 17+ | Composants UI |
-| RxJS | 7.x | Programmation réactive |
+| Angular | 17+ | Main frontend framework |
+| TypeScript | 5.x | Development language |
+| Angular Material | 17+ | UI component library |
+| RxJS | 7.x | Reactive programming |
 | Angular SSR | 17+ | Server-Side Rendering |
-| CSS / SCSS | — | Stylisation des composants |
-| Chart.js / ApexCharts | — | Graphiques & KPIs dashboard |
-| HttpClient | Built-in | Appels API REST vers Spring Boot |
-| JWT Interceptor | Custom | Injection automatique du token auth |
+| CSS / SCSS | — | Component styling |
+| Chart.js / ApexCharts | — | Dashboard charts & KPIs |
+| HttpClient | Built-in | REST API calls to Spring Boot |
+| JWT Interceptor | Custom | Automatic auth token injection |
 
 ---
 
-##  Modules fonctionnels
+## 5. Functional Modules
 
 ###  Core / Auth
-Service central `auth.service.ts` gérant le login, logout, et le token JWT.
+`auth.service.ts`: central service handling login, logout, JWT token storage and renewal. Used by route guards and HTTP interceptors across the application.
 
-###  Assistant — InsurFlow
-Chat (`insurflow-assistant`) avec l'agent IA LangChain4j. Conversations multi-tours avec affichage du raisonnement de l'agent.
+###  Assistant — InsurFlow (`insurflow-assistant`)
+Chat interface for interacting with the LangChain4j-orchestrated AI agent. Supports multi-turn conversations and displays the agent's chain-of-thought reasoning. The `data-access/` folder manages message sending and receiving through the API.
 
-###  AI Settings — Paramètres IA
-Page `parametres-ia` pour configurer les modèles LLM : température, choix du modèle, prompts système.
+###  AI Settings — `parametres-ia`
+Configuration page for LLM models: temperature, model selection, system prompts. API configuration calls are isolated in `data-access/`.
 
 ###  Dashboard
-KPIs métier : sinistres en cours, polices actives, taux de traitement automatique.
+Real-time business KPIs: active claims, active policies, AI agent automated processing rate. Data interfaces are defined in `models/`.
 
-###  Claims — Sinistres
-5 pages : accueil sinistres, dossier détaillé, rapports admin, rapport individuel, liste de feedbacks. Inclut types et modèles.
+###  Claims Management
+Full-featured module with 5 pages: `claims-home` (entry point), `dossier-sinistre` (full claim detail), `admin-claim-reports` (admin reports), `claim-report-page` (individual report), `feedback-claims-list` (processed claim feedback). Includes `claim-types`, `models` and `data-access`.
 
 ###  Clients
-`client-list` : liste paginée des assurés. `client-space` : espace personnel avec historique polices/sinistres.
+`client-list`: paginated list of all policyholders. `client-space`: personal space for a client with full history of their policies and claims.
 
 ###  Agents
-`agent-result-list` : affichage des actions et résultats produits par les agents IA Spring AI.
+`agent-result-list`: displays the actions and outputs automatically produced by Spring AI agents following workflow orchestration.
 
-###  Policies — Polices
-`polices` : détail d'une police. `policy-list` : vue liste de tous les contrats d'assurance.
+###  Policies
+`polices`: individual policy detail and management. `policy-list`: full list view of all insurance contracts. API calls are handled in `data-access/`.
 
 ###  Decisions — Consultation Decisions
-`consultation-decisions` : validation humaine des décisions prises automatiquement par les agents (Human-in-the-loop).
+`consultation-decisions`: interface for human review and validation of AI-automated decisions. Ensures regulatory compliance through a **Human-in-the-loop** mechanism.
 
-###  Experts
-`expert-space` : espace de travail. `expert-feedback-form` : formulaire de feedback sur un sinistre.
+### Experts
+`expert-space`: expert workspace with assigned claim files. `expert-feedback-form`: form for submitting an expert evaluation report on a complex claim.
 
 ###  Home — Insurance Home
-Page d'accueil avec résumé d'activité et accès rapide aux modules.
+Platform home page: activity summary, quick access to modules, and notifications for ongoing workflows.
 
 ###  Layout — Sidebar & Topbar
-Navigation globale partagée sur toute l'application.
+`sidebar`: main navigation menu between modules. `topbar`: top bar with user profile management and notifications.
 
 ---
 
-##  Installation & Lancement
+## 6. Installation & Setup
 
-### Prérequis
+### Prerequisites
 
-| Outil | Version minimale |
+| Tool | Minimum Version |
 |---|---|
 | Node.js | >= 18.x |
 | npm | >= 9.x |
@@ -228,43 +227,47 @@ npm install -g @angular/cli
 ### Installation
 
 ```bash
-git clone https://github.com/<votre-org>/<votre-repo>.git
-cd <votre-repo>/frontend
+# Clone the repository
+git clone https://github.com/<your-org>/<your-repo>.git
+cd <your-repo>/frontend
+
+# Install project dependencies
 npm install
 ```
 
-### Lancement en développement
+### Development Server
 
 ```bash
 ng serve
-# http://localhost:4200
+# Available at http://localhost:4200
 ```
 
-### Lancement en mode SSR
+### SSR Mode
 
 ```bash
 npm run dev:ssr
-# http://localhost:4200
+# Available at http://localhost:4200
 ```
 
-### Build production
+### Production Build
 
 ```bash
 ng build --configuration production
+# Output files in dist/
 ```
 
 ### Tests
 
 ```bash
-ng test    # Tests unitaires
-ng e2e     # Tests end-to-end
+ng test    # Unit tests
+ng e2e     # End-to-end tests
 ```
 
 ---
 
-## 🔧 Variables d'environnement
+## 7. Environment Variables
 
-`src/environments/environment.ts` :
+`src/environments/environment.ts`:
 ```typescript
 export const environment = {
   production: false,
@@ -274,7 +277,7 @@ export const environment = {
 };
 ```
 
-`src/environments/environment.prod.ts` :
+`src/environments/environment.prod.ts`:
 ```typescript
 export const environment = {
   production: true,
@@ -286,37 +289,4 @@ export const environment = {
 
 ---
 
-## 📐 Conventions de code
-
-| Convention | Règle appliquée |
-|---|---|
-| Architecture | Feature-based (un dossier par module métier) |
-| Composants | Standalone Components (Angular 17+) |
-| Nommage fichiers | `kebab-case` (ex: `claims-home.component.ts`) |
-| Nommage classes | `PascalCase` (ex: `ClaimsHomeComponent`) |
-| Services | `providedIn: 'root'` (singleton global) |
-| Data-access | Dossier `data-access/` par feature pour isoler les appels API |
-| Models | Dossier `models/` par feature pour les interfaces TypeScript |
-| Styles | CSS global dans `styles.css`, CSS local par composant |
-| Commits | Conventional Commits (feat, fix, docs, refactor...) |
-
-```bash
-feat: add insurflow-assistant streaming support
-fix: resolve JWT token expiry on claims page
-docs: update frontend README structure
-refactor: move claims API calls to data-access service
-```
-
----
-
-## 👨‍💻 Auteurs
-
-| Nom | Rôle |
-|---|---|
-| *Votre Nom* | Développeur Full Stack — PFE |
-| *Encadrant académique* | Encadrant académique |
-| *Encadrant entreprise* | Encadrant professionnel |
-
----
-
-*Projet réalisé dans le cadre du **Projet de Fin d'Études** — Année universitaire 2024/2025*
+*Final Year Project — Academic Year 2024/2025*
